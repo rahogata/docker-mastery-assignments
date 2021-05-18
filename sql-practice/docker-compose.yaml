@@ -2,13 +2,20 @@ version: '3'
 services:
   postgres:
     image: postgres:12.5-alpine
-    ports:
-    - '5432:5432'
     environment:
 # Not required if POSTGRES_HOST_AUTH_METHOD is present
 #      POSTGRES_PASSWORD: postgres
       POSTGRES_HOST_AUTH_METHOD: trust
-      POSTGRES_USER: shiva
+      POSTGRES_USER: postgres
       POSTGRES_DB: postgres
-    volumes:
+    volumes: &v
     - ${PWD}/docker-entrypoint-initdb.d/:/docker-entrypoint-initdb.d/
+    - ${PWD}/sqls:/opt/sql-practice/sqls/
+    working_dir: &w /opt/sql-practice
+  mysql:
+    image: mysql:5
+    environment:
+#      MYSQL_ROOT_PASSWORD: rama
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+    volumes: *v
+    working_dir: *w
